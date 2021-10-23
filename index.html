@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script type="module">
+        import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js';
+
+        // create a scene to render stuff
+        let scene = new THREE.Scene();
+        const pointLight = new THREE.PointLight(0xffffff);
+        pointLight.position.set(5, 5, 5);
+        const loader = new THREE.TextureLoader();
+
+        // sets background image
+        loader.load('pikachu.jpg', function (texture) {
+            scene.background = texture;
+        });
+
+
+        // window.innerWidth/window.innerHeight - aspect ratio
+        // 0.1 - near plane - shorter distance between camera and  object(3dmodel or shape) ,object will appear bigger
+        // 1000 - far plane - bigger distnace between camera and object  ,object will appear smaller
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerWidth, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        // set size of rendered to window width and height
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        // append renderer to dom
+        document.body.appendChild(renderer.domElement);
+
+        // var geometry = new THREE.BoxGeometry(1, 2, 1);
+        // var material = new THREE.MeshBasicMaterial({ color: 'blue' });
+        // var cube = new THREE.Mesh(geometry, material);
+        // scene.add(cube);
+
+        // for making a cube 
+        //  first 1 represents width  , bigger number,bigger width
+        //   second 1 represent height
+        //   third  1 represent depth
+        // let geometry2 = new THREE.BoxGeometry(1, 1, 1);
+        // // then set the material for this shape 
+        // let material2 = new THREE.MeshBasicMaterial({ color: 'red' });
+        // // creating shape
+        // let cube2 = new THREE.Mesh(geometry2, material2)
+        // // adding shape to project
+
+        // scene.add(cube2);
+
+        const pokemonTexture = new THREE.TextureLoader().load('pokemon.jpg');
+        const pokemonTexture2 = new THREE.TextureLoader().load('pikachu.jpg');
+
+        // renderer.shadowMap.enabled = true;
+        // renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+        //Create a DirectionalLight and turn on shadows for the light
+        const light = new THREE.DirectionalLight(0xffffff, 1, 1000);
+        light.position.set(0, 1, 0); //default; light shining from top
+        light.castShadow = true; // default false
+        scene.add(light);
+        //Set up shadow properties for the light
+        light.shadow.mapSize.width = window.innerWidth; // default
+        light.shadow.mapSize.height = window.innerHeight; // default
+        light.shadow.camera.near = 0.5; // default
+        light.shadow.camera.far = 500; // default
+
+        // const geometry = new THREE.RingGeometry(1, 2, 110);
+        // const material = new THREE.MeshBasicMaterial({ color: 0xffaa00, side: THREE.DoubleSide });
+        // const mesh = new THREE.Mesh(geometry, material);
+        // scene.add(mesh);
+
+
+
+        // CRAZY SHIT
+        const geometryS2 = new THREE.SphereGeometry(44, 22, 66, 2, 62, 72);
+        const materialS2 = new THREE.MeshBasicMaterial({ map: pokemonTexture2 });
+        const sphere2 = new THREE.Mesh(geometryS2, materialS2);
+
+        scene.add(sphere2);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+
+        const geometryS = new THREE.SphereGeometry(1, 52, 36);
+        const materialS = new THREE.MeshBasicMaterial({ map: pokemonTexture });
+        const sphere = new THREE.Mesh(geometryS, materialS);
+
+        scene.add(sphere);
+
+
+        const geometry = new THREE.TorusGeometry(8, 2, 22, 66);
+        const material = new THREE.MeshBasicMaterial({ color: '#faff', wireframe: true });
+        const torus = new THREE.Mesh(geometry, material);
+        scene.add(torus);
+
+
+
+
+
+
+        // bigger value closer to z axis,bigger objects
+        camera.position.z = 20;
+        // higher the value ,objects will be moved to left  
+        camera.position.x = 2;
+
+        // this function will keep getting called
+        // and stuff will be re-rendered
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            // cube.rotation.x += 0.05;
+            // cube.rotation.z += 0.05;
+            controls.update();
+
+            // cube2.rotation.z += 22;
+            torus.rotation.y += 0.02;
+            sphere.rotation.x += 0.1;
+            torus.rotation.x += 0.01;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+
+</html>
